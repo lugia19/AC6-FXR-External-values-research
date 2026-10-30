@@ -7,6 +7,7 @@
 //!                                        (default max), latest the most recent write from any block.
 //!   <id|*> const <value>
 //!   <id|*> sweep <min> <max> <seconds>   triangle wave min -> max -> min
+//!   <id|*> step <min> <max> <step> <seconds>   min, min + step, ... max, one step per <seconds>, looping
 //! A rule applies when nothing has written the ID into the effect's block; add "force" at the end to apply it
 //! always.
 //! A specific ID's rule wins over "*", and "*" never covers ID 0 (terminate).
@@ -24,6 +25,7 @@ const DEFAULT_RULES: &str = "\
 #                                        the last 0.25 s (default max), or the latest write from any block
 #   <id|*> const <value>
 #   <id|*> sweep <min> <max> <seconds>   triangle wave
+#   <id|*> step <min> <max> <step> <seconds>   min, min + step, ... max, one step per <seconds>, looping
 # A specific ID's rule wins over \"*\", and \"*\" never covers 0 (terminate). Lines starting with # are ignored.
 * mirror
 ";
@@ -40,6 +42,7 @@ enum Mode {
     Mirror(Aggregate),
     Const(f32),
     Sweep { min: f32, max: f32, period: f32 },
+    Step { min: f32, max: f32, step: f32, interval: f32 },
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -207,6 +210,13 @@ pub fn lookup(id: i32, present: bool) -> Option<f32> {
             let tri = if phase < 0.5 { phase * 2.0 } else { 2.0 - phase * 2.0 };
             min + (max - min) * tri
         }
+        Mode::Step { min, max, step, interval } => {
+            // min, min + step, ... up to max (inclusive), one step per interval, then back to min.
+            let t = START.get_or_init(Instant::now).elapsed().as_secs_f32();
+            let steps = ((max - min) / step.max(f32::EPSILON)).floor() as u64 + 1;
+            let index = (t / interval.max(0.01)) as u64 % steps;
+            min + step * index as f32
+        }
     };
     if let Some(s) = slot(id) {
         s.served.fetch_add(1, Ordering::Relaxed);
@@ -239,6 +249,12 @@ fn parse(text: &str) -> (Rules, Vec<String>) {
             (Some("const"), 3) => num(2).map(Mode::Const),
             (Some("sweep"), 5) => match (num(2), num(3), num(4)) {
                 (Some(min), Some(max), Some(period)) => Some(Mode::Sweep { min, max, period }),
+                _ => None,
+            },
+            (Some("step"), 6) => match (num(2), num(3), num(4), num(5)) {
+                (Some(min), Some(max), Some(step), Some(interval)) if step > 0.0 && max >= min => {
+                    Some(Mode::Step { min, max, step, interval })
+                }
                 _ => None,
             },
             _ => None,

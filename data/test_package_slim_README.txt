@@ -15,4 +15,6 @@ Chart: 12 m above the bullet, facing the camera, scaled with camera distance. Ba
   green   60000  speed                 0-800 km/h
   blue    70000  pulse armor radius    0-20 m (9.5 for Pulse Armor = about half)
   purple  70200  scan distance         0-1000
+  gold    40002  reference: stepped by the logger (rule "40002 step 0 1000 250 1" in
+                 fxr_extvalues_overrides.txt): 0, 250, 500, 750, 1000, one step per second
 Bright bar = value, dim wider bar = full range.

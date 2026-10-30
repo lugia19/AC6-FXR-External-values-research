@@ -170,6 +170,7 @@ Output in `Game\debug-logs\`:
                                      it in the last 0.25 s (default max), or the latest write
 <id|*> const <value>
 <id|*> sweep <min> <max> <seconds>   triangle wave
+<id|*> step <min> <max> <step> <seconds>   min, min + step, ... max, one step per <seconds>, looping
 ```
 
 A rule only applies when nothing provides the ID to that effect: no `set` call wrote it into the effect's block
@@ -184,7 +185,8 @@ is scaled by camera distance (ID 2000) to stay readable. Bars are texture 1 (a s
 floats 12 m above the effect, and ends on ID 0. The legend is in `data/test_package_README.txt`.
 `npm install && node make_bar_fxr.mjs <out dir> [full|slim]` (edit `TARGETS` to pick which FXR IDs to write). The
 `slim` preset has only the identified IDs that change in normal play (2000, 40000, 40001, 60000, 70000 at 0–20 m,
-70200); its legend is in `data/test_package_slim_README.txt`.
+70200); its legend is in `data/test_package_slim_README.txt`. It also has a gold reference bar on 40002, driven by the
+rule `40002 step 0 1000 250 1`.
 
 ### 6. Test setup in game
 

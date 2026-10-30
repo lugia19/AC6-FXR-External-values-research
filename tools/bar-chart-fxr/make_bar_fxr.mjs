@@ -38,6 +38,8 @@ const PRESETS = {
     { color: [0.1, 1, 0.2, 1], bars: [[60000, 0, 800]] },                     // speed (km/h)
     { color: [0.1, 0.7, 1, 1], bars: [[70000, 0, 20]] },                      // pulse armor radius (m)
     { color: [0.8, 0.2, 1, 1], bars: [[70200, 0, 1000]] },                    // scan distance
+    // Reference bar: the logger's overrides drive 40002 with "40002 step 0 1000 250 1" (0, 250, ... 1000, 1/s).
+    { color: [1, 0.78, 0.1, 1], bars: [[40002, 0, 1000]] },
   ],
 }
 const PRESET = process.argv[3] ?? 'full'
