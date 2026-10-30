@@ -11,7 +11,7 @@ Game\debug-logs\fxr_extvalues_overrides.txt to receive values from other systems
 Chart: 12 m above the bullet, facing the camera, scaled with camera distance. Bars left to right:
   white   2000   camera distance       0-100 m
   orange  40000  booster output        0-100 %
-  orange  40001  speed / max speed     0-1
+  orange  40001  speed ratio (vertical or horizontal, see writeup)  0-1
   green   60000  speed                 0-800 km/h
   blue    70000  pulse armor radius    0-20 m (9.5 for Pulse Armor = about half)
   purple  70200  scan distance         0-1000

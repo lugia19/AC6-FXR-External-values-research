@@ -72,7 +72,7 @@ forced ID 0 to 0 whenever no `set` call had written it stopped effects from ever
 | 20000 | Grass-related: `max(a, b)` of two floats | `0x14137a3a0` / `0x14137d953` | not seen | 800063 (GrassTypeParam[90]) | unknown |
 | 30000, 30001 | ? | generic `0x141628270`; also `0x140c517d0` | always 1 | – | unknown |
 | **40000** | **Booster output %** | thruster system `0x140937aa1` / `0x140937cc0`; thruster controller `+0x4a4` × 100 | 0–100 | 90303, 90311 (speed/size, orange→blue color) | confirmed (code + bar chart) |
-| **40001** | **Speed ÷ max speed (0–1)** | same; controller `+0x4a8` from `0x140854c00` | 0–1; pins at 1 on jumps and quick boosts | – | confirmed (code + bar chart); which field is the max is a reading of the code |
+| **40001** | **Speed ratio (0–1), horizontal or vertical depending on state** | same; controller `+0x4a8` from `0x140854c00` | 0–1; pins at 1 on jumps and quick boosts, behaves oddly otherwise | – | mechanism confirmed in assembly; meaning of the reference fields is a guess. See below |
 | 40002 | Thruster angle in degrees (0–90) | same; controller `+0x4ac` × 57.2958 | always 0 | – | mechanism known, never seen non-zero |
 | 50000, 50001 | ? (0–100) | foot system `0x140928494` / `0x140927b60`, attached to FootSfxParam effects | 0–100 | – | unknown |
 | **60000** | **Character speed in km/h** | same as 50000 (also `{60000, 1}` above); `|v| × 60 × 60 / 1000` | 0–738 | – | confirmed |
@@ -83,6 +83,13 @@ forced ID 0 to 0 whenever no `set` call had written it stopped effects from ever
 | 70030 | Flag 0/1 (capsule spawner 2) | `0x14087aca0`; also `0x14092ef27` (constant 1.0) | not seen | – | code only |
 | 70100 | ? | `0x14161ef60` / `0x14161f7f7` | not seen | – | unknown |
 | 70200 | Scan distance (known) | `0x1408e92c8` / `0x1408e9d30` | 430 | 8000 | confirmed |
+
+**40001 in detail** (`0x140854c00`, checked in the assembly): velocity = `ctrl+0x320` + `ctrl+0x1a0`. The result is
+first horizontal speed (X/Z length) ÷ the horizontal length of `ctrl+0x310`. If the vertical reference
+(`ctrl+0x350` while moving up, `ctrl+0x354` while moving down, absolute value) is non-zero, the result is
+*replaced* by signed vertical speed ÷ that reference. Then it's clamped to 0–1. So it reads as vertical climb rate
+whenever a vertical reference is set (pins at 1 on jumps, 0 while falling), and as horizontal speed otherwise.
+All speeds are converted to km/h first. The references are probably the current movement mode's speed caps.
 
 Also registered but never set in our runs: `{50001}` alone (`0x14088f564`, 16 blocks at a time during loads),
 `{50000, 50001}` (`0x1409387ee`).
