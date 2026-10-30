@@ -75,7 +75,7 @@ forced ID 0 to 0 whenever no `set` call had written it stopped effects from ever
 | **40001** | **Speed ratio (0–1), horizontal or vertical depending on state** | same; controller `+0x4a8` from `0x140854c00` | 0–1; pins at 1 on jumps and quick boosts, behaves oddly otherwise | – | mechanism confirmed in assembly; meaning of the reference fields is a guess. See below |
 | 40002 | Thruster angle in degrees (0–90) | same; controller `+0x4ac` × 57.2958 | always 0 | – | mechanism known, never seen non-zero |
 | 50000, 50001 | ? (0–100) | foot system `0x140928494` / `0x140927b60`, attached to FootSfxParam effects | 0–100 | – | unknown |
-| **60000** | **Character speed in km/h** | same as 50000 (also `{60000, 1}` above); `|v| × 60 × 60 / 1000` | 0–738 | – | confirmed |
+| **60000** | **Grounded horizontal speed in km/h** | same as 50000 (also `{60000, 1}` above); horizontal length `sqrt(x² + z²)` of the velocity from `0x140845b10(ctrl)`, × 60 × 60 / 1000 (`0x14162c210`) | 0–738; drops to 0 in the air | – | confirmed in game; that `0x140845b10` is the ground-movement velocity is inferred |
 | **70000** | **Pulse armor / shield radius in meters** (pulse armor spawners) | `0x1408a14b0`, `0x1408a74f0`, `0x1408a11c0` | 9.5 while up, 0 when broken | 990080-82, 990180-82 | confirmed: = `MakeCollisionPaOpenRadius` (Pulse Armor, Terminal Armor); Pulse Protection has `stayPa_Radius` 50 |
 | 70000 | Capsule radius (capsule spawners, below) | `0x1406887c0` / `0x1406a16a0`, `0x140873610` / `0x14087aca0` | not seen | – | code only |
 | 70010 | Capsule length between the end caps (length − 2 × radius) | same capsule spawners; also `0x14092ef27` | not seen | NPC `AtkParam.hit0_SfxId` effects (RaD Spider MT, Balteus, Sea Spider, Strider, IB-07...), 653000 | code only |

@@ -12,7 +12,7 @@ Chart: 12 m above the bullet, facing the camera, scaled with camera distance. Ba
   white   2000   camera distance       0-100 m
   orange  40000  booster output        0-100 %
   orange  40001  speed ratio (vertical or horizontal, see writeup)  0-1
-  green   60000  speed                 0-800 km/h
+  green   60000  grounded speed        0-800 km/h (0 in the air)
   blue    70000  pulse armor radius    0-20 m (9.5 for Pulse Armor = about half)
   purple  70200  scan distance         0-1000
   gold    40002  reference: stepped by the logger (rule "40002 step 0 1000 250 1" in
