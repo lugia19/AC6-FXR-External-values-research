@@ -186,7 +186,9 @@ floats 12 m above the effect, and ends on ID 0. The legend is in `data/test_pack
 `npm install && node make_bar_fxr.mjs <out dir> [full|slim]` (edit `TARGETS` to pick which FXR IDs to write). The
 `slim` preset has only the identified IDs that change in normal play (2000, 40000, 40001, 60000, 70000 at 0–20 m,
 70200); its legend is in `data/test_package_slim_README.txt`. It also has a gold reference bar on 40002, driven by the
-rule `40002 step 0 1000 250 1`.
+rule `40002 step 0 1000 250 1`, and a pink bar on 900000, an ID no game system uses, driven by `900000 sweep 0 1 4`.
+An FXR can declare any ID: the game gives it a slot in the effect's block (0 if nothing writes it), so the logger's
+read hook can feed effects entirely new inputs.
 
 ### 6. Test setup in game
 

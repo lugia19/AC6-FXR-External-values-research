@@ -17,4 +17,6 @@ Chart: 12 m above the bullet, facing the camera, scaled with camera distance. Ba
   purple  70200  scan distance         0-1000
   gold    40002  reference: stepped by the logger (rule "40002 step 0 1000 250 1" in
                  fxr_extvalues_overrides.txt): 0, 250, 500, 750, 1000, one step per second
+  pink    900000 made-up ID, not a game value: only the logger provides it (rule "900000 sweep 0 1 4"):
+                 rises and falls smoothly over 4 seconds
 Bright bar = value, dim wider bar = full range.

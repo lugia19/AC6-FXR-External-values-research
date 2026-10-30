@@ -40,6 +40,8 @@ const PRESETS = {
     { color: [0.8, 0.2, 1, 1], bars: [[70200, 0, 1000]] },                    // scan distance
     // Reference bar: the logger's overrides drive 40002 with "40002 step 0 1000 250 1" (0, 250, ... 1000, 1/s).
     { color: [1, 0.78, 0.1, 1], bars: [[40002, 0, 1000]] },
+    // Made-up ID no game system uses, provided only by the logger: "900000 sweep 0 1 4".
+    { color: [1, 0.3, 0.65, 1], bars: [[900000, 0, 1]] },
   ],
 }
 const PRESET = process.argv[3] ?? 'full'
