@@ -175,7 +175,9 @@ Generates an FXR with one bar per external value (20 bars in color groups). Each
 from a fixed range through an `ExternalValue1Modifier`, and a dim bar behind it shows the full range. Everything
 is scaled by camera distance (ID 2000) to stay readable. Bars are texture 1 (a solid white square). The chart
 floats 12 m above the effect, and ends on ID 0. The legend is in `data/test_package_README.txt`.
-`npm install && node make_bar_fxr.mjs <out dir>` (edit `TARGETS` to pick which FXR IDs to write).
+`npm install && node make_bar_fxr.mjs <out dir> [full|slim]` (edit `TARGETS` to pick which FXR IDs to write). The
+`slim` preset has only the identified IDs that change in normal play (2000, 40000, 40001, 60000, 70000 at 0–20 m,
+70200); its legend is in `data/test_package_slim_README.txt`.
 
 ### 6. Test setup in game
 

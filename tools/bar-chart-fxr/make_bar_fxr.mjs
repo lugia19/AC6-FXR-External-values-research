@@ -1,6 +1,6 @@
 // Builds "bar chart" test FXRs: one bar per external value, height = value mapped from [min, max] to [0, 1] (clamped),
 // with a dim full-height bar behind it for scale. The same chart is written under several FXR IDs so each spawner's
-// values can be checked in game. Usage: node make_bar_fxr.mjs <output dir>
+// values can be checked in game. Usage: node make_bar_fxr.mjs <output dir> [full|slim]
 import {
   AttachMode,
   BasicNode,
@@ -20,15 +20,29 @@ import {
 import fs from 'node:fs'
 import path from 'node:path'
 
-// Bars left to right. Groups are separated by a gap and share a color.
-const GROUPS = [
-  { color: [1, 1, 1, 1], bars: [[1, 0, 1], [3, 0, 1], [1000, 0, 1], [2000, 0, 100], [10000, -1, 1], [20000, 0, 200],
-    [30000, 0, 1], [30001, 0, 1]] },
-  { color: [1, 0.45, 0.05, 1], bars: [[40000, 0, 100], [40001, 0, 1], [40002, 0, 90]] },
-  { color: [0.1, 1, 0.2, 1], bars: [[50000, 0, 100], [50001, 0, 100], [60000, 0, 800]] },
-  { color: [0.1, 0.7, 1, 1], bars: [[70000, 0, 60], [70010, 0, 100], [70020, 0, 1000], [70030, 0, 1]] },
-  { color: [0.8, 0.2, 1, 1], bars: [[70100, 0, 100], [70200, 0, 1000]] },
-]
+// Bars left to right, as [id, min, max]. Groups are separated by a gap and share a color.
+const PRESETS = {
+  // Every ID of interest.
+  full: [
+    { color: [1, 1, 1, 1], bars: [[1, 0, 1], [3, 0, 1], [1000, 0, 1], [2000, 0, 100], [10000, -1, 1], [20000, 0, 200],
+      [30000, 0, 1], [30001, 0, 1]] },
+    { color: [1, 0.45, 0.05, 1], bars: [[40000, 0, 100], [40001, 0, 1], [40002, 0, 90]] },
+    { color: [0.1, 1, 0.2, 1], bars: [[50000, 0, 100], [50001, 0, 100], [60000, 0, 800]] },
+    { color: [0.1, 0.7, 1, 1], bars: [[70000, 0, 60], [70010, 0, 100], [70020, 0, 1000], [70030, 0, 1]] },
+    { color: [0.8, 0.2, 1, 1], bars: [[70100, 0, 100], [70200, 0, 1000]] },
+  ],
+  // Only the identified IDs that change during normal play.
+  slim: [
+    { color: [1, 1, 1, 1], bars: [[2000, 0, 100]] },                          // camera distance (m)
+    { color: [1, 0.45, 0.05, 1], bars: [[40000, 0, 100], [40001, 0, 1]] },    // booster output %, speed / max speed
+    { color: [0.1, 1, 0.2, 1], bars: [[60000, 0, 800]] },                     // speed (km/h)
+    { color: [0.1, 0.7, 1, 1], bars: [[70000, 0, 20]] },                      // pulse armor radius (m)
+    { color: [0.8, 0.2, 1, 1], bars: [[70200, 0, 1000]] },                    // scan distance
+  ],
+}
+const PRESET = process.argv[3] ?? 'full'
+const GROUPS = PRESETS[PRESET]
+if (!GROUPS) throw new Error(`Unknown preset '${PRESET}' (expected ${Object.keys(PRESETS).join(' or ')})`)
 
 const BAR_WIDTH = 0.4
 const BAR_STEP = 0.6
